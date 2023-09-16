@@ -2,13 +2,19 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 import "./IERC6551Registry.sol";
 
-contract SoulBoundAccountToken is ERC721, ERC721Burnable, AccessControl {
+contract SoulBoundAccountToken is
+    ERC721,
+    ERC721Enumerable,
+    ERC721Burnable,
+    AccessControl
+{
     error TranferProhibited();
     bool transferAllowed = false;
     bytes32 public constant TOGGLE_ROLE = keccak256("TOGGLE_ROLE");
@@ -47,7 +53,12 @@ contract SoulBoundAccountToken is ERC721, ERC721Burnable, AccessControl {
 
     function supportsInterface(
         bytes4 interfaceId
-    ) public view override(ERC721, AccessControl) returns (bool) {
+    )
+        public
+        view
+        override(ERC721, ERC721Enumerable, AccessControl)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId);
     }
 
@@ -61,5 +72,14 @@ contract SoulBoundAccountToken is ERC721, ERC721Burnable, AccessControl {
             from != address(0) ||
             to != address(0)
         ) revert TranferProhibited();
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 batchSize
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 }
