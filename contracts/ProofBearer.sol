@@ -51,6 +51,18 @@ contract ProofBearer is
         _setTokenURI(tokenId, uri);
     }
 
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public override(ERC721, IERC721) {
+        if (transferAllowed || hasRole(TRANSFER_ROLE, from)) {
+            ERC721.transferFrom(from, to, tokenId);
+        } else {
+            revert TranferProhibited();
+        }
+    }
+
     function tokenAccount(uint256 tokenId) public view returns (address) {
         return
             IERC6551Registry(0x02101dfB77FDE026414827Fdc604ddAF224F0921)
@@ -61,15 +73,6 @@ contract ProofBearer is
                     tokenId,
                     0
                 );
-    }
-
-    function _transfer(address from, address to, uint256 tokenId) internal override {
-        if (
-            !hasRole(TRANSFER_ROLE, from) ||
-            from != address(0) ||
-            to != address(0)
-        ) revert TranferProhibited();
-        ERC721._transfer(from, to, tokenId);
     }
 
     // The following functions are overrides required by Solidity.
