@@ -1,2 +1,2 @@
-# SBA-Token
-Token-Bound-Account as a Soud-Bound-Token
+# Proof Bearer NFT
+bears all the relevant proofs for an impact project using the ImpactScribe protocol
