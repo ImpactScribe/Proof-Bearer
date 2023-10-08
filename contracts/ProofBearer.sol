@@ -24,7 +24,7 @@ contract ProofBearer is
 
     uint256 private _nextTokenId;
 
-    constructor() ERC721("SoulBoundAccountToken", "SBTA") {
+    constructor() ERC721("ImpactScribe proof bearer", "ISPB") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(TRANSFER_ROLE, msg.sender);
         _grantRole(TOGGLE_ROLE, msg.sender);
