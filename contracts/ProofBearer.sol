@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 import "./IERC6551Registry.sol";
@@ -14,6 +15,7 @@ contract ProofBearer is
     ERC721Enumerable,
     ERC721URIStorage,
     ERC721Pausable,
+    ERC721Burnable,
     AccessControl
 {
     error TranferProhibited();
@@ -22,7 +24,7 @@ contract ProofBearer is
     bytes32 public constant TOGGLE_ROLE = keccak256("TOGGLE_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
 
-    uint256 private _nextTokenId;
+    uint256 public nextTokenId;
 
     constructor() ERC721("ImpactScribe proof bearer", "ISPB") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -46,7 +48,7 @@ contract ProofBearer is
     }
 
     function safeMint(address to, string memory uri) external whenNotPaused {
-        uint256 tokenId = _nextTokenId++;
+        uint256 tokenId = nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
